@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-#%% create empty lists to save all
+#%% write the folder path from your computer
 
 folder_path = "C:/Users/gabv1/bobinas"
 listatfr = list()
@@ -16,35 +16,35 @@ file_paths = glob.glob(folder_path + "/*")
 
 
 
-#%% create empty lists to save all
+#%% load data from coils and save it in a list
 
 for elements in file_paths:
     dummy = pd.read_excel (elements)
     lista.append (dummy)
 
-#%% create empty lists to save all
+#%%  transform the list into a numpy array 
 array_bobinas = np.array (lista)
-#%% create empty lists to save all
+#%% Apply transformation to all datapoints in numpy array
 
 Milivolts=(array_bobinas*3300)/1023 #calculo de mV
 offset=(508*3300)/1023
 Magnetic_field_mT=(Milivolts-offset)/7.5
 Magnetic_field_gauss=Magnetic_field_mT*(10)
 
-#%% create empty lists to save all
+#%% Take the top 1000 highest values of each of the measurement points. Use this first, if not, average will be near to zero
 iterate = np.arange(5)
 top = list()
 for coil in iterate:
     top_indices = np.argpartition(Magnetic_field_gauss[coil], -1000, axis=0)[-1000:]
     top_values = np.take_along_axis(Magnetic_field_gauss[coil], top_indices, axis=0)
     top.append (top_values)
-    #%% create empty lists to save all
+#%% create new array with only the top values, transform it into a numpy and then take the average of the values. 
 
 array_top = np.array(top)
 array_final = np.mean (array_top, axis=1)
-    #%% create empty lists to save all
+#%% Reshape
 reshaped_data = np.reshape(array_final, (5, 12, 12))
-    #%% create empty lists to save all
+#%% Plot
 
 
 
